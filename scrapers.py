@@ -44,8 +44,9 @@ def scrape_facebook(TOPIC, LIMIT):
     query = "aquafresh"
     post = requests.get("https://graph.facebook.com/search?access_token=" + token +  "&q=" + query + "&type=page")
   
-    pass
     
+
+
 
 
 

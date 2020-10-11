@@ -46,24 +46,13 @@ def get_user_evaluation(q):
     return 0 
 
 
-def scrape_questions(LIMIT, WEBSITE, TOPIC):
-    # filter scraper output for only questions
-    return [post for post in dispatch_scraper(WEBSITE)(TOPIC, LIMIT) if '?' in post]
-    
-
-def dispatch_scraper(WEBSITE):
-    dispatcher ={
-        'reddit': scrapers.scrape_reddit
-        ,'twitter': scrapers.scrape_twitter
-        ,'youtube': scrapers.scrape_youtube
-    }
-    return dispatcher[WEBSITE]
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('usage: collect.py Limit Website Topic \n (e.g. collect.py 40 reddit nlp)')
         sys.exit()
+
 
     for question in scrape_questions(int(sys.argv[1]), sys.argv[2], sys.argv[3]): 
         q = generate_record(question) 
