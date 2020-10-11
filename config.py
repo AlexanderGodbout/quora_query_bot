@@ -1,4 +1,6 @@
 
+
+
 def create_questions_table():
     query = ''' 
     CREATE TABLE IF NOT EXISTS Questions ( 
@@ -11,7 +13,7 @@ def create_questions_table():
         ,is_accepted BIT
         ,source VARCHAR(255) 
         ,earnings DECIMAL(13, 2)
-        ,views INT
+        ,views 
         ,ad_impressions INT
         ,answers INT
         ,external_traffic DECIMAL(5, 3)
@@ -21,6 +23,10 @@ def create_questions_table():
         ,build DECIMAL(4, 2)
     )
     '''
+
+
+
+
 
 def insert_into_table(): 
     query = '''
