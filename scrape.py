@@ -3,6 +3,7 @@
 import csv
 import time 
 import random 
+import sys
 
 from ques_db import ques_db, Table
 import scrapers
@@ -43,17 +44,17 @@ if __name__ == "__main__":
             params= {
                 'topic': random.choice(get_subreddits()) 
                 ,'website': 'reddit' #random.choice(['reddit', 'youtube', 'twitter'])
-                ,'version': '0.0.0.0.0'
+                ,'version': '0.0.0.0'
             }
             try: 
                 questions = scrape_questions(params['website'], params['topic'])
                 for question in questions: 
-                    print(question)
+                    sys.stdout.write(question)
                     record = {**params, **{'question': question, 'timestamp':'Now()'}}
                     records.append(record)
             except: 
                 print('received 404 HTTP response')
-        db.insert(Table('scrapes'), records) 
+        if records: db.insert(Table('scrapes'), records) 
      
     
 
