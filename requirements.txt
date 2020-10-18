@@ -1,1 +1,4 @@
 pymysql==0.10.1
+praw 
+twitter 
+facebook
