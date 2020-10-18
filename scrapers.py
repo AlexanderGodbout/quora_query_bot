@@ -1,11 +1,12 @@
 # scrapers
 
+import os 
+
 import praw 
 import twitter
 import youtube_scraper
 import facebook
 
-import os 
 
 def scrape_reddit(TOPIC, LIMIT): 
     api = praw.Reddit(
