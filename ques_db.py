@@ -36,9 +36,8 @@ class ques_db:
                 query +=  cell + ', '
             query = query[:-2]  + '),\n' 
         query = query[:-2] + ';'
-    
+        print(query)
         self.cursor.execute(query)
-        print('Records inserted')
       
 
 class Table: 
