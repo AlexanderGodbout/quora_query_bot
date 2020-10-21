@@ -12,6 +12,7 @@ class ques_db:
                     ,db="quora_query_db" 
                     ,charset='utf8mb4'
                     ,autocommit=True
+                    ,cursorclass=pymysql.cursors.DictCursor
                 )
         self.cursor = db.cursor() 
 
@@ -36,10 +37,16 @@ class ques_db:
                 query +=  cell + ', '
             query = query[:-2]  + '),\n' 
         query = query[:-2] + ';'
+<<<<<<< HEAD
     
+=======
+>>>>>>> a36acc6c74345bca4c56d30b8b41e7cb79b02920
         print(query)
         self.cursor.execute(query)
-        print('Records inserted')
+
+
+    def get_questions(self):
+        pass
       
 
 class Table: 
@@ -60,6 +67,16 @@ class Table:
             self.desc =  {
                 'id':               'INT NOT NULL'
                 ,'account':         'VARCHAR(255)'
+                ,'is_grammatical':  'TINYINT(1)'
+                ,'is_unique':       'TINYINT(1)'
+                ,'is_posted':       'TINYINT(1)'
+                ,'version':         'VARCHAR(255)'
+                ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+            }
+        
+        if table == 'benchmarks': 
+            self.desc =  {
+                'id':               'INT NOT NULL'
                 ,'topics':          'VARCHAR(255)'
                 ,'answers':         'INT'
                 ,'followers':       'INT'
@@ -68,8 +85,6 @@ class Table:
                 ,'ques_earn':       'DECIMAL(12, 2)'
                 ,'req_earn':        'DECIMAL(12, 2)'
                 ,'tot_earn':        'DECIMAL(12, 2)'
-                ,'grammatical':     'TINYINT(1)'
-                ,'is_unique':       'TINYINT(1)'
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }

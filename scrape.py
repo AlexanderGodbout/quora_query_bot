@@ -3,7 +3,11 @@
 import csv
 import time 
 import random 
+<<<<<<< HEAD
 import sys
+=======
+import sys 
+>>>>>>> a36acc6c74345bca4c56d30b8b41e7cb79b02920
 
 from ques_db import ques_db, Table
 import scrapers
@@ -33,6 +37,7 @@ def scrape_questions(WEBSITE, TOPIC):
     }
     return [post for post in dispatch_scraper[WEBSITE](TOPIC, get_limit[WEBSITE]) if '?' in post]
     
+
 
 if __name__ == "__main__":
 
