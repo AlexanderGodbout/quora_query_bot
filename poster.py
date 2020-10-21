@@ -3,8 +3,14 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+
 import time
 import re
+
+
+from ques_db import ques_db, Table 
+
 
 # Source: https://www.blackhatworld.com/seo/quora-bot-source-code.949582/
 
@@ -20,9 +26,9 @@ def readFile():
     return qlist
 
 #Login to Quora
-def login():
-    email="alexgodbout@gmail.com"
-    passy="Mmlja5ja5ja%"
+def login(params):
+    email = params['account'] 
+    passy = params['password'] 
     print("Logging in...")
     driver.get("http://quora.com")
 
@@ -57,31 +63,52 @@ def login():
     time.sleep(2)
     # LOGIN FINISHED
 
+def post_question(driver):
+    driver.find_element(By.CSS_SELECTOR, ".qu-color--white > .q-text").click()
+    time.sleep(2)
+    driver.find_element(By.CSS_SELECTOR, ".q-text-area").send_keys(question)
+    time.sleep(2) 
+    driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div').click()
+    
 
-
+def get_status(driver):
+    source = driver.page_source 
+    if "Was your question already asked" in source: 
+        return {'is_unique': 0}
+    elif "Double-check your question" in source: 
+        return {'is_grammatical': 0}
+    elif "Make sure this question has the right topics" in source:
+        return {'is_unique': 1, 'is_grammatical': 1, 'is_posted':1} 
 
 if __name__ == '__main__':
 
+    accounts = {
+        'alexgodbout':
+            {'account':     'alexgodbout@gmail.com'
+            ,'password':    'Mmlja5ja5ja%'}
+        ,'ggunthy':
+            {'account': 'ggunth@gmail.com'
+            ,'password': 'zcaaddaadd'}
+    } #TODO create permissions file and add to git.ignore
+
     #Create Question List
     qlist = readFile()
-
-    #Create Webdriver Vroom Vroom
-    driver = webdriver.Chrome('/Users/alexandergodbout/Downloads/chromedriver')
-
-    login()
-
+    
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    params = accounts['alexgodbout']
+    login(params)
     # Iterate through qlist ask questions till no more
     for question in qlist:
-        print(question)
-
-        driver.find_element(By.CSS_SELECTOR, ".qu-color--white > .q-text").click()
-        time.sleep(2)
-        driver.find_element(By.CSS_SELECTOR, ".q-text-area").send_keys(question)
-        time.sleep(2) 
-        #driver.find_element(By.CSS_SELECTOR, ".q-box:nth-child(2) > .q-click-wrapper > .q-flex > .q-text > .q-text").click()
-        driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div').click()
+        post_question(driver)
         time.sleep(10)
-        driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div[2]/div/div/div/div[2]/div/div/div[3]/div/div[2]/button/div/div/div').click()
+        status = get_status(driver)
+        ques_id = {'id': 100}
+        record = {**{'version': '0.0.0.0'}, **ques_id, **params, **status}
+        print(record)
+        
+        # exit question submission window 
+        driver.find_element(By.CSS_SELECTOR, ".q-absolute > .q-click-wrapper svg").click()
+
 
     
     
@@ -90,6 +117,8 @@ if __name__ == '__main__':
 
     
     comment = ''' 
+    # exit question submission window 
+    #driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) .q-box:nth-child(1) .q-text > .q-text").click()
 
 
         //*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div
