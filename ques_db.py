@@ -31,12 +31,13 @@ class ques_db:
         for record in records: 
             query += '('
             for field in Table.desc.keys(): 
-                cell = str(record.get(field, 'Null')).replace("'","")
+                cell = str(record.get(field, 'Null')).replace("'","").replace("\\","")
                 cell = cell if cell in ('Null','Now()') else "'" + cell + "'"
                 query +=  cell + ', '
             query = query[:-2]  + '),\n' 
         query = query[:-2] + ';'
     
+        print(query)
         self.cursor.execute(query)
         print('Records inserted')
       
@@ -94,8 +95,3 @@ def create_database():
     db.create_table(Table('scrapes')) 
     db.create_table(Table('posts') )
     db.create_table(Table('predicts'))
-
-
-
-
-
