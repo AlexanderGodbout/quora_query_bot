@@ -3,12 +3,13 @@
 
 import pymysql
 
+from secrets import db_cred
 class ques_db: 
     def __init__(self): 
         db = pymysql.connect(
                     host="mysql.queryquarry.tech"
-                    ,user="scopesdbu"
-                    ,passwd="mmlja5ja5ja%"
+                    ,user=db_cred['user'] 
+                    ,passwd=db_cred['passwd'] 
                     ,db="quora_query_db" 
                     ,charset='utf8mb4'
                     ,autocommit=True
@@ -37,10 +38,6 @@ class ques_db:
                 query +=  cell + ', '
             query = query[:-2]  + '),\n' 
         query = query[:-2] + ';'
-<<<<<<< HEAD
-    
-=======
->>>>>>> a36acc6c74345bca4c56d30b8b41e7cb79b02920
         print(query)
         self.cursor.execute(query)
 
