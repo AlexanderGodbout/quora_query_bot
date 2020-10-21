@@ -12,6 +12,7 @@ class ques_db:
                     ,db="quora_query_db" 
                     ,charset='utf8mb4'
                     ,autocommit=True
+                    ,cursorclass=pymysql.cursors.DictCursor
                 )
         self.cursor = db.cursor() 
 

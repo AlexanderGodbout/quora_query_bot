@@ -22,7 +22,8 @@ def scrape_twitter(TOPIC, LIMIT):
                   consumer_secret='rGKxc7KhfFzB8bUdU2f7D7GHrtrXZocX7qJBFoAmopetDldBrs',
                   access_token_key='1108423746040168448-VvQ6gQr6Y96rICUFXedQGtrlaKSDqb',
                   access_token_secret='pzv4k9rKvWS8JGPjTUXtiC8cBz797eQdsIeXJxUxL9uzt',
-                  tweet_mode='extended'
+                  tweet_mode='extended',
+                  sleep_on_rate_limit=True
             )
     return [tweet['full_text'] for tweet in api.GetSearch( term=TOPIC, count=LIMIT, 
                                                             return_json=True)['statuses']]
