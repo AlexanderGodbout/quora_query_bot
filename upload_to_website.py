@@ -1,6 +1,8 @@
 import os
 import time 
+import subprocess
 
-while True: 
+while True:
+    print('yes')
     time.sleep(60)
     os.system('bash update_website.sh') 
