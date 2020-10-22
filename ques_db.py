@@ -8,8 +8,8 @@ class ques_db:
     def __init__(self): 
         db = pymysql.connect(
                     host="mysql.queryquarry.tech"
-                    ,user= 'scopesdbu' #db_cred['user'] 
-                    ,passwd='mmlja5ja5ja%' #db_cred['passwd'] 
+                    ,user= db_cred['user'] 
+                    ,passwd= db_cred['passwd'] 
                     ,db="quora_query_db" 
                     ,charset='utf8mb4'
                     ,autocommit=True
