@@ -106,4 +106,7 @@ def create_database():
     db = ques_db()
     db.create_table(Table('scrapes')) 
     db.create_table(Table('posts') )
+    db.create_table(Table('benchmarks'))
     db.create_table(Table('predicts'))
+
+
