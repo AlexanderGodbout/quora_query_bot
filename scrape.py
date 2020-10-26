@@ -3,11 +3,7 @@
 import csv
 import time 
 import random 
-<<<<<<< HEAD
 import sys
-=======
-import sys 
->>>>>>> a36acc6c74345bca4c56d30b8b41e7cb79b02920
 
 from ques_db import ques_db, Table
 import scrapers
