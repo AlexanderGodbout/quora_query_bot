@@ -74,17 +74,22 @@ class Table:
         if table == 'benchmarks': 
             self.desc =  {
                 'id':               'INT NOT NULL'
+                ,'earnings':        'DECIMAL(12, 2)'
+                ,'question':        'VARCHAR(255)'
+                ,'ask_date':        'DATE'
                 ,'topics':          'VARCHAR(255)'
-                ,'answers':         'INT'
+                ,'answer_count':    'INT'
+                ,'request_count':   'INT'
                 ,'followers':       'INT'
                 ,'views':           'INT'
-                ,'ad_impressions':  'INT'
-                ,'ques_earn':       'DECIMAL(12, 2)'
-                ,'req_earn':        'DECIMAL(12, 2)'
-                ,'tot_earn':        'DECIMAL(12, 2)'
-                ,'version':         'VARCHAR(255)'
-                ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+                ,'ad_impressions':  'INT' 
+                ,'traffic_sources': 'VARCHAR(255)'
+                ,'question_earnings': 'DECIMAL(12, 2)'
+                ,'request_earnings':  'DECIMAL(12, 2)'
+                ,'version':           'VARCHAR(255)'
+                ,'timestamp':         'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
+
 
         if table == 'predicts': 
             self.desc = { 
@@ -109,4 +114,5 @@ def create_database():
     db.create_table(Table('benchmarks'))
     db.create_table(Table('predicts'))
 
+create_database()
 
