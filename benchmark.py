@@ -10,6 +10,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 import re
+import datetime
+
+from ques_db import ques_db, Table 
 
 
 
@@ -55,6 +58,10 @@ def login(params):
 def get_texts(web_element): 
     return [e.text for e in web_element]
 
+def extract_date(ask_date):
+    if not re.search('[0-9]{4}', ask_date):
+        ask_date += str(datetime.now().year)
+    return datetime.strptime(ask_date, 'Asked %b %d, %Y').strftime('%d/%m/%Y')
 
 def scrape_stats(scrolls): 
 
@@ -77,9 +84,9 @@ def scrape_stats(scrolls):
             topic_list = get_texts(element.find_elements(By.CSS_SELECTOR, ".TopicName"))
             topic_lists.append(topic_list)
 
+
     except: 
         print('scraping failed')
-
 
     try: 
         earnings = get_texts(driver.find_elements(By.CSS_SELECTOR, ".earnings_amount"))
@@ -102,21 +109,16 @@ def scrape_stats(scrolls):
         ,'REQUEST EARNINGS': []
     }
 
-
     for label, info in zip(labels[5:], infos[1:]): 
-        print(label, info)
         if label in extra_stats: extra_stats[label].append(info)
         
-
     stats = []
-    print(topic_lists)
-
     min_len = min([len(L) for L in [earnings, questions, ask_dates, answer_counts, request_counts]])
     for i in range(min_len):
         stat = {
-            'earning': earnings[i]
+            'earning': earnings[i].replace('$','')
             ,'question': questions[i]
-            ,'ask_date': ask_dates[i]
+            ,'ask_date': extract_date(ask_dates[i])
             ,'topics': str(topic_lists[i])
             ,'answer_count': answer_counts[i]
             ,'request_count': request_counts[i]
@@ -124,14 +126,13 @@ def scrape_stats(scrolls):
             ,'views': extra_stats['VIEWS'][i]
             ,'ad_impressions': extra_stats['AD IMPRESSIONS'][i]
             ,'traffic_sources': extra_stats['TRAFFIC SOURCES'][i]
-            ,'question_earnings': extra_stats['QUESTION EARNINGS'][i]
-            ,'request_earnings': extra_stats['REQUEST EARNINGS'][i]
+            ,'question_earnings': extra_stats['QUESTION EARNINGS'][i].replace('$','')
+            ,'request_earnings': extra_stats['REQUEST EARNINGS'][i].replace('$','')
+            ,'version': '0.0.0.0'
         }
-
 
         stats.append(stat)
     return stats 
-
 
 
 if __name__ == '__main__':
@@ -150,9 +151,11 @@ if __name__ == '__main__':
     params = accounts['alexgodbout']
     login(params)
     stats = scrape_stats(10)
-    print(stats)
 
-    
+    db = ques_db()
+    db.insert(Table('Benchmarks'), stats)
+
+
 
     for stat in stats: 
         pass 
