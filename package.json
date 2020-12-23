@@ -1,0 +1,23 @@
+{
+  "name": "quora_query_bot",
+  "version": "1.0.0",
+  "description": "quora_query_bot",
+  "main": "index.js",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderGodbout/quora_query_bot.git"
+  },
+  "author": "Alex Godbout",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlexanderGodbout/quora_query_bot/issues"
+  },
+  "homepage": "https://github.com/AlexanderGodbout/quora_query_bot#readme"
+}
