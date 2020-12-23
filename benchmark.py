@@ -10,7 +10,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 import re
-import datetime
+from datetime import datetime
 
 from ques_db import ques_db, Table 
 
@@ -23,6 +23,7 @@ def login(params):
     print("Logging in...")
     driver.get("http://quora.com")
 
+    time.sleep(5)
     # Create Soup Object and find all form_column classes
     forms = BeautifulSoup(driver.page_source, "lxml").find_all(class_="form_column")
 
@@ -56,12 +57,13 @@ def login(params):
 
 
 def get_texts(web_element): 
-    return [e.text for e in web_element]
+    # return text from web_element, or, if empty, return None 
+    return ([e.text for e in web_element] or [None])
 
 def extract_date(ask_date):
     if not re.search('[0-9]{4}', ask_date):
-        ask_date += str(datetime.now().year)
-    return datetime.strptime(ask_date, 'Asked %b %d, %Y').strftime('%d/%m/%Y')
+        ask_date += ', ' + str(datetime.now().year)
+    return datetime.strptime(ask_date, 'Asked %b %d, %Y').strftime('%Y-%m-%d')
 
 def scrape_stats(scrolls): 
 
@@ -78,60 +80,56 @@ def scrape_stats(scrolls):
             print('scrolling failed')
             break 
 
-    topic_lists = []
-    try: 
-        for element in driver.find_elements(By.CSS_SELECTOR, ".TopicList"):
-            topic_list = get_texts(element.find_elements(By.CSS_SELECTOR, ".TopicName"))
+    
+    stats = []
+    for listing in driver.find_elements(By.CSS_SELECTOR, ".partners_question_list_item"):
+        try: 
+            topic_lists = []
+            topic_list = get_texts(listing.find_elements(By.CSS_SELECTOR, ".TopicName"))
             topic_lists.append(topic_list)
 
+            earnings = get_texts(listing.find_elements(By.CSS_SELECTOR, ".earnings_amount"))
+            questions = get_texts(listing.find_elements(By.CSS_SELECTOR, ".ui_qtext_rendered_qtext"))
+            ask_dates = get_texts(listing.find_elements(By.CSS_SELECTOR, ".ask_date"))
+            answer_counts = get_texts(listing.find_elements(By.CSS_SELECTOR, ".answer_count"))
+            request_counts = get_texts(listing.find_elements(By.XPATH, "//*[contains(@id,'total_request_count')]"))
+            labels = get_texts(listing.find_elements(By.CSS_SELECTOR, ".label"))
+            infos = get_texts(listing.find_elements(By.CSS_SELECTOR, ".info"))
 
-    except: 
-        print('scraping failed')
+            extra_stats  = {
+                'FOLLOWER': []
+                ,'VIEWS': []
+                ,'AD IMPRESSIONS': []
+                ,'TRAFFIC SOURCES': []
+                ,'QUESTION EARNINGS': []
+                ,'REQUEST EARNINGS': []
+            }
 
-    try: 
-        earnings = get_texts(driver.find_elements(By.CSS_SELECTOR, ".earnings_amount"))
-        questions = get_texts(driver.find_elements(By.CSS_SELECTOR, ".ui_qtext_rendered_qtext"))
-        ask_dates = get_texts(driver.find_elements(By.CSS_SELECTOR, ".ask_date"))
-        answer_counts = get_texts(driver.find_elements(By.CSS_SELECTOR, ".answer_count"))
-        request_counts = get_texts(driver.find_elements(By.XPATH, "//*[contains(@id,'total_request_count')]"))
-        labels = get_texts(driver.find_elements(By.CSS_SELECTOR, ".label"))
-        infos = get_texts(driver.find_elements(By.CSS_SELECTOR, ".info"))
-    except: 
-        print('scraping failed')
-    
+            for label, info in zip(labels, infos): 
+                if label in extra_stats: extra_stats[label].append(info)
 
-    extra_stats  = {
-        'FOLLOWER': []
-        ,'VIEWS': []
-        ,'AD IMPRESSIONS': []
-        ,'TRAFFIC SOURCES': []
-        ,'QUESTION EARNINGS': []
-        ,'REQUEST EARNINGS': []
-    }
+            stat = {
+                'earnings': earnings[0].replace('$','')
+                ,'question': questions[0]
+                ,'ask_date': extract_date(ask_dates[0])
+                ,'topics': str(topic_lists)
+                ,'answer_count': answer_counts[0]
+                ,'request_count': request_counts[0]
+                ,'followers': extra_stats['FOLLOWER'][0]
+                ,'views': extra_stats['VIEWS'][0]
+                ,'ad_impressions': extra_stats['AD IMPRESSIONS'][0]
+                ,'traffic_sources': extra_stats['TRAFFIC SOURCES'][0]
+                ,'question_earnings': extra_stats['QUESTION EARNINGS'][0].replace('$','')
+                ,'request_earnings': extra_stats['REQUEST EARNINGS'][0].replace('$','')
+                ,'version': '0.0.0.0'
+                ,'timestamp':'Now()'
+            }
+            print(stat)
+            stats.append(stat)
 
-    for label, info in zip(labels[5:], infos[1:]): 
-        if label in extra_stats: extra_stats[label].append(info)
-        
-    stats = []
-    min_len = min([len(L) for L in [earnings, questions, ask_dates, answer_counts, request_counts]])
-    for i in range(min_len):
-        stat = {
-            'earning': earnings[i].replace('$','')
-            ,'question': questions[i]
-            ,'ask_date': extract_date(ask_dates[i])
-            ,'topics': str(topic_lists[i])
-            ,'answer_count': answer_counts[i]
-            ,'request_count': request_counts[i]
-            ,'followers': extra_stats['FOLLOWER'][i]
-            ,'views': extra_stats['VIEWS'][i]
-            ,'ad_impressions': extra_stats['AD IMPRESSIONS'][i]
-            ,'traffic_sources': extra_stats['TRAFFIC SOURCES'][i]
-            ,'question_earnings': extra_stats['QUESTION EARNINGS'][i].replace('$','')
-            ,'request_earnings': extra_stats['REQUEST EARNINGS'][i].replace('$','')
-            ,'version': '0.0.0.0'
-        }
+        except Exception as e: print(str(e))
+            
 
-        stats.append(stat)
     return stats 
 
 
@@ -150,10 +148,10 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(ChromeDriverManager().install())
     params = accounts['alexgodbout']
     login(params)
-    stats = scrape_stats(10)
+    stats = scrape_stats(300)
 
     db = ques_db()
-    db.insert(Table('Benchmarks'), stats)
+    db.insert(Table('benchmarks'), stats)
 
 
 

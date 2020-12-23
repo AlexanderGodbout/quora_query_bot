@@ -38,7 +38,6 @@ class ques_db:
                 query +=  cell + ', '
             query = query[:-2]  + '),\n' 
         query = query[:-2] + ';'
-        print(query)
         self.cursor.execute(query)
 
 
@@ -62,7 +61,7 @@ class Table:
 
         if table == 'posts': 
             self.desc =  {
-                'id':               'INT NOT NULL'
+                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
                 ,'account':         'VARCHAR(255)'
                 ,'is_grammatical':  'TINYINT(1)'
                 ,'is_unique':       'TINYINT(1)'
@@ -73,7 +72,7 @@ class Table:
         
         if table == 'benchmarks': 
             self.desc =  {
-                'id':               'INT NOT NULL'
+                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
                 ,'earnings':        'DECIMAL(12, 2)'
                 ,'question':        'VARCHAR(255)'
                 ,'ask_date':        'DATE'
@@ -93,14 +92,11 @@ class Table:
 
         if table == 'predicts': 
             self.desc = { 
-                'id':               'INT NOT NULL'
-                ,'pred_views':      'INT'
-                ,'pred_topics':     'VARCHAR(255)'
-                ,'pred_grammatical':'TINYINT(1)'
-                ,'pred_unique':     'TINYINT(1)'
-                ,'pred_views':      'INT'
-                ,'pred_tot_earn':   'DECIMAL(12, 2)'
-                ,'features_id':     'INT'
+                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
+                ,'scrape_id':       'INT NOT NULL REFERENCES scrapes(id)'
+                ,'model':           'VARCHAR(255)'
+                ,'predict_type':    'VARCHAR(255)'
+                ,'prediction':      'VARCHAR(255)'
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
@@ -114,5 +110,7 @@ def create_database():
     db.create_table(Table('benchmarks'))
     db.create_table(Table('predicts'))
 
-create_database()
+create_database() 
+
+
 
