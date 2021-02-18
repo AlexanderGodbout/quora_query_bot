@@ -90,13 +90,13 @@ class Table:
             }
 
 
-        if table == 'predicts': 
+        if table == 'gens': 
             self.desc = { 
                 'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
                 ,'scrape_id':       'INT NOT NULL REFERENCES scrapes(id)'
+                ,'question':        'VARCHAR(255)'
                 ,'model':           'VARCHAR(255)'
-                ,'predict_type':    'VARCHAR(255)'
-                ,'prediction':      'VARCHAR(255)'
+                ,'params':          'VARCHAR(255)'
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
@@ -108,7 +108,7 @@ def create_database():
     db.create_table(Table('scrapes')) 
     db.create_table(Table('posts') )
     db.create_table(Table('benchmarks'))
-    db.create_table(Table('predicts'))
+    db.create_table(Table('gens'))
 
 create_database() 
 
