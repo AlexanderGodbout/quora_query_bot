@@ -10,6 +10,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
   <script>
     var obj = {};
+    var dict = {};
     $.getJSON('mysql_test.php', function(data) {
       var items = [];
       $.each(data, function(fieldName, fieldValue) {
