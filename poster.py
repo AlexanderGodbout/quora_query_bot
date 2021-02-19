@@ -2,6 +2,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -13,16 +14,6 @@ from ques_db import ques_db, Table
 
 # Source: https://www.blackhatworld.com/seo/quora-bot-source-code.949582/
 
-
-#Read File ,strip new lines ,return question list
-def readFile():
-    filey = "questions.txt"
-    with open(filey, "r") as f:
-        q = f.readlines()
-    qlist = [x.strip() for x in q]
-    # qlist=reversed(qlist) #Will reverse the question list if needed
-    print(len(qlist), "Total Questions Loaded")
-    return qlist
 
 #Login to Quora
 def login(params):
@@ -62,13 +53,14 @@ def login(params):
     time.sleep(2)
     # LOGIN FINISHED
 
-def post_question(driver):
+def post_question(driver, question):
+    question = question.replace('?','').strip()
     driver.find_element(By.CSS_SELECTOR, ".qu-color--white > .q-text").click()
     time.sleep(2)
     driver.find_element(By.CSS_SELECTOR, ".q-text-area").send_keys(question)
     time.sleep(2) 
-    driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div').click()
-    
+    #driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div').click()
+    driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").click()
 
 def get_status(driver):
     source = driver.page_source 
@@ -79,7 +71,23 @@ def get_status(driver):
     elif "Make sure this question has the right topics" in source:
         return {'is_unique': 1, 'is_grammatical': 1, 'is_posted':1} 
 
+
+def get_gens(limit=10):
+    db = ques_db()
+    db.cursor.execute(''' SELECT 
+                            id 
+                            ,question
+                          FROM gens 
+                          WHERE id NOT IN ( 
+                            SELECT gen_id 
+                            FROM posts 
+                         ) LIMIT ''' + str(limit)
+                     )
+    return db.cursor.fetchall()
+
+
 if __name__ == '__main__':
+    db = ques_db()
 
     accounts = {
         'alexgodbout':
@@ -91,22 +99,44 @@ if __name__ == '__main__':
     } #TODO create permissions file and add to git.ignore
 
     #Create Question List
-    qlist = readFile()
-    
     driver = webdriver.Chrome(ChromeDriverManager().install())
-    params = accounts['alexgodbout']
+    account = 'alexgodbout'
+    params = accounts[account]
     login(params)
-    # Iterate through qlist ask questions till no more
-    for question in qlist:
-        post_question(driver)
+    records = []
+    for gen in get_gens(limit=5):
+        post_question(driver, gen['question'])
         time.sleep(10)
         status = get_status(driver)
-        ques_id = {'id': 100}
-        record = {**{'version': '0.0.0.0'}, **ques_id, **params, **status}
-        print(record)
-        
+        record= {
+            'gen_id': gen['id']
+            ,'account': account
+            ,'version': '0.0.0.0'
+            ,'timestamp':'Now()'
+        }
+        records.append({**record, **status})
+      
         # exit question submission window 
-        driver.find_element(By.CSS_SELECTOR, ".q-absolute > .q-click-wrapper svg").click()
+        #driver.close()
+        driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) > .q-sticky .q-box .q-text > .q-text").click()
+        #driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").send_keys(Keys.ESCAPE)
+       
+        click_based = '''
+        driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").click()
+        driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) .q-flex > .q-click-wrapper .q-text > .q-text").click()
+        assert driver.switch_to.alert.text == "Continue without editing topics?"
+        driver.switch_to.alert.accept()
+        driver.find_element(By.CSS_SELECTOR, ".kNZJaj:nth-child(1)")
+        actions = ActionChains(self.driver)
+        actions.move_to_element(element).perform()
+        driver.find_element(By.CSS_SELECTOR, ".kNZJaj:nth-child(1)").click()
+        '''
+
+
+        #driver.find_element(By.CSS_SELECTOR, ".q-absolute > .q-click-wrapper svg").click()
+        
+        
+    if records: db.insert(Table('posts'), records)
 
 
     

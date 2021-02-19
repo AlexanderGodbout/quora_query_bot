@@ -20,6 +20,7 @@ $proj = isset($_POST['entry'])?$_POST['entry']:'';
 
 #$json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
 
+$predict = '{"scrape_id":2,"prediction":-1}';
 $json = '{"scrape_id":2,"model":"Alex","predict_type":"Ambiguity","prediction":-1, "version":"0.0.0.0"}';
 
 #$json = $proj;
