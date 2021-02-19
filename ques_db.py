@@ -62,6 +62,7 @@ class Table:
         if table == 'posts': 
             self.desc =  {
                 'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
+                ,'gen_id':          'INT NOT NULL REFERENCES scrapes(id)'
                 ,'account':         'VARCHAR(255)'
                 ,'is_grammatical':  'TINYINT(1)'
                 ,'is_unique':       'TINYINT(1)'
