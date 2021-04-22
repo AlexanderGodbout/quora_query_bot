@@ -5,7 +5,9 @@ import os
 import praw 
 import twitter
 import youtube_scraper
+import quora_scraper 
 import facebook
+
 
 
 def scrape_reddit(TOPIC, LIMIT): 
@@ -47,7 +49,14 @@ def scrape_facebook(TOPIC, LIMIT):
     post = requests.get("https://graph.facebook.com/search?access_token=" + token +  "&q=" + query + "&type=page")
   
     
+def scrape_quora(TOPIC, LIMIT):
+    LIMIT = int(LIMIT * 2) # convert number of comments to number of scrolls
+    return quora_scraper(TOPIC, LIMIT)
+<<<<<<< HEAD
 
+
+=======
+>>>>>>> f3bac17... created the bot
 
 
 

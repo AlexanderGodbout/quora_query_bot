@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>That's about it</title>
+  </head>
+  <body>
+    <button onclick="insertRecord()">Create Project</button>
+
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <script>
+    var obj = {};
+    var dict = {};
+    $.getJSON('mysql_test.php', function(data) {
+      var items = [];
+      $.each(data, function(fieldName, fieldValue) {
+        items.push(fieldValue['question']);
+        console.log(fieldValue);
+      });
+      console.log(items)
+    });
+
+    
+    function insertRecord() {
+      var entry = prompt("Please enter project name");
+      if (entry != null && entry !="") {
+          $.post("mysql_insert.php", { entry : entry });
+      }
+    } 
+    
+  </script>
+</html>

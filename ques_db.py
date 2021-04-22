@@ -59,10 +59,35 @@ class Table:
                 ,'timestamp':   'TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL'
             }
 
+        if table == 'gens': 
+            self.desc = { 
+                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
+                ,'scrape_group':    'VARCHAR(255)'
+                ,'question':        'VARCHAR(255)'
+                ,'model':           'VARCHAR(255)'
+                ,'params':          'VARCHAR(255)'
+                ,'version':         'VARCHAR(255)'
+                ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+            }
+
+    
+        if table == 'evals': 
+            self.desc = { 
+                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
+                ,'eval_group':      'VARCHAR(255)'
+                ,'gen_id':          'INT NOT NULL REFERENCES gen(id)'
+                ,'eval_model':      'VARCHAR(255)'
+                ,'eval_params':     'VARCHAR(255)'
+                ,'is_postable':     'TINYINT(1)'
+                ,'version':         'VARCHAR(255)'
+                ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+            }
+
+
         if table == 'posts': 
             self.desc =  {
                 'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
-                ,'gen_id':          'INT NOT NULL REFERENCES scrapes(id)'
+                ,'gen_id':          'INT NOT NULL REFERENCES gen(id)'
                 ,'account':         'VARCHAR(255)'
                 ,'is_grammatical':  'TINYINT(1)'
                 ,'is_unique':       'TINYINT(1)'
@@ -70,57 +95,54 @@ class Table:
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
-        
+
+
         if table == 'benchmarks': 
             self.desc =  {
-                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
-                ,'earnings':        'DECIMAL(12, 2)'
-                ,'question':        'VARCHAR(255)'
-                ,'ask_date':        'DATE'
-                ,'topics':          'VARCHAR(255)'
-                ,'answer_count':    'INT'
-                ,'request_count':   'INT'
-                ,'followers':       'INT'
-                ,'views':           'INT'
-                ,'ad_impressions':  'INT' 
-                ,'traffic_sources': 'VARCHAR(255)'
+                'id':                 'INT AUTO_INCREMENT PRIMARY KEY' 
+                ,'earnings':          'DECIMAL(12, 2)'
+                ,'question':          'VARCHAR(255)'
+                ,'ask_date':          'DATE'
+                ,'topics':            'VARCHAR(255)'
+                ,'answer_count':      'INT'
+                ,'request_count':     'INT'
+                ,'followers':         'INT'
+                ,'views':             'INT'
+                ,'ad_impressions':    'INT' 
+                ,'traffic_sources':   'VARCHAR(255)'
                 ,'question_earnings': 'DECIMAL(12, 2)'
                 ,'request_earnings':  'DECIMAL(12, 2)'
                 ,'version':           'VARCHAR(255)'
                 ,'timestamp':         'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
 
-
 <<<<<<< HEAD
-<<<<<<< HEAD
-        if table == 'predicts': 
-=======
-        if table == 'gens': 
->>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
+        if table == 'groups': 
             self.desc = { 
-                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
-                ,'scrape_id':       'INT NOT NULL REFERENCES scrapes(id)'
-                ,'question':        'VARCHAR(255)'
-                ,'model':           'VARCHAR(255)'
-<<<<<<< HEAD
-                ,'predict_type':    'VARCHAR(255)'
-                ,'prediction':      'VARCHAR(255)'
+                'item_id':          'INT' 
+                ,'group_name':      'VARCHAR(255)'
+                ,'item_tbl':        'VARCHAR(255)'
+                ,'group_tbl':       'VARCHAR(255)'
 =======
         if table == 'gens': 
             self.desc = { 
                 'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
-                ,'scrape_id':       'INT NOT NULL REFERENCES scrapes(id)'
+                ,'scrape_group':    'VARCHAR(255)'
                 ,'question':        'VARCHAR(255)'
                 ,'model':           'VARCHAR(255)'
                 ,'params':          'VARCHAR(255)'
->>>>>>> a130c4aa99f7aaf38246aa454d17528d7c526676
-=======
-                ,'params':          'VARCHAR(255)'
->>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
+>>>>>>> f3bac17... created the bot
             }
 
+        if table == 'groups': 
+                self.desc = { 
+                    'item_id':          'INT' 
+                    ,'group_name':      'VARCHAR(255)'
+                    ,'item_tbl':        'VARCHAR(255)'
+                    ,'group_tbl':       'VARCHAR(255)'
+                }
     
 def create_database(): 
 
@@ -128,15 +150,13 @@ def create_database():
     db.create_table(Table('scrapes')) 
     db.create_table(Table('posts') )
     db.create_table(Table('benchmarks'))
-<<<<<<< HEAD
-<<<<<<< HEAD
-    db.create_table(Table('predicts'))
-=======
     db.create_table(Table('gens'))
->>>>>>> a130c4aa99f7aaf38246aa454d17528d7c526676
+<<<<<<< HEAD
+    db.create_table(Table('evals'))
 =======
-    db.create_table(Table('gens'))
->>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
+>>>>>>> f3bac17... created the bot
+    db.create_table(Table('groups'))
+
 
 create_database() 
 

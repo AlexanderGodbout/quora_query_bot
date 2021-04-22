@@ -4,6 +4,8 @@
 import bs4 as bs
 import os 
 import pickle
+from PyDictionary import PyDictionary
+
 
 def get_OPTED_dictionary():
     path  = '/Users/alexandergodbout/Documents/Grammarism/Code/Quora_Query_Bot/data/OPTED/v003/'
@@ -13,9 +15,12 @@ def get_OPTED_dictionary():
         with open(path+filename, 'rb') as file: 
             soup = bs.BeautifulSoup(file, features='lxml')
             for entry in soup.find_all('p'): 
-                word = entry.find('b').text
-                POS = entry.find('i').text.replace('.','').replace(' ','').split('&').split(',')
-                POS_dict[word] = POS_dict.get(word, set()).union(set(POS))
+                try: 
+                    word = entry.find('b').text
+                    POS = entry.find('i').text.replace('.','').replace(' ','').split('&').split(',')
+                    POS_dict[word] = POS_dict.get(word, set()).union(set(POS))
+                except: 
+                    print("skip")
     return POS_dict 
         
 def misc():
@@ -51,3 +56,21 @@ def label_virality(question):
 
 def label_obsessionality(question):
     return 1
+
+
+if __name__ == "__main__":
+    dictionary=PyDictionary()
+    #print (dictionary.meaning("a"))
+    print(dictionary.meaning("the"))
+    # noun 
+    # verb 
+    # adjective 
+    # adverb 
+    # article
+    sentence = "The dog barked"
+    POS = ""
+    for word in sentence.split(' '): 
+        #print(word)
+        #print(dictionary.meaning("the"))
+        POS = POS + " " + list(dictionary.meaning("word").keys())[0]
+    print(POS)      

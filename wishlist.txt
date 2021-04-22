@@ -1,2 +1,0 @@
-logging
-Youtube and Twitter

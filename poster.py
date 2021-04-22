@@ -8,11 +8,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 import time
 import re
+import random 
 
 from ques_db import ques_db, Table 
 
 
-# Source: https://www.blackhatworld.com/seo/quora-bot-source-code.949582/
+
+
 
 
 #Login to Quora
@@ -22,29 +24,9 @@ def login(params):
     print("Logging in...")
     driver.get("http://quora.com")
 
-    # Create Soup Object and find all form_column classes
-    forms = BeautifulSoup(driver.page_source, "lxml").find_all(class_="form_column")
-
-    # Iterate through forms
-    # Find polymorphic id string,append a hashtag(#) to create css_selector
-    for form in forms:
-        try:
-            # This is for email/password entry box
-            data = form.find("input")["name"]
-            if data == "email":
-                email_css = "#" + form.find("input")["id"]
-            if data == "password":
-                password_css = "#" + form.find("input")["id"]
-        except:
-            pass
-
-        try:
-            # This is for the Login Button
-            data = form.find("input")["value"]
-            if data == "Login":
-                button_css = "#" + form.find("input")["id"]
-        except:
-            pass
+    email_css = "#email" 
+    password_css = "#password"
+    button_css = "button[type='button']"
 
     driver.find_element_by_css_selector(email_css).send_keys(email)
     driver.find_element_by_css_selector(password_css).send_keys(passy)
@@ -61,6 +43,7 @@ def post_question(driver, question):
     time.sleep(2) 
     #driver.find_element(By.XPATH, '//*[@id="root"]/div/div[1]/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/button/div/div/div').click()
     driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").click()
+    time.sleep(random.randint(5,10))
 
 def get_status(driver):
     source = driver.page_source 
@@ -75,13 +58,17 @@ def get_status(driver):
 def get_gens(limit=10):
     db = ques_db()
     db.cursor.execute(''' SELECT 
-                            id 
+                            gens.id 
                             ,question
-                          FROM gens 
-                          WHERE id NOT IN ( 
+                          FROM evals 
+                          LEFT JOIN gens
+                            ON evals.gen_id = gens.id
+                          WHERE gens.id NOT IN ( 
                             SELECT gen_id 
                             FROM posts 
-                         ) LIMIT ''' + str(limit)
+                            ) 
+                            AND evals.is_postable = 1
+                         LIMIT ''' + str(limit)
                      )
     return db.cursor.fetchall()
 
@@ -104,9 +91,8 @@ if __name__ == '__main__':
     params = accounts[account]
     login(params)
     records = []
-    for gen in get_gens(limit=5):
+    for gen in get_gens(limit=10):
         post_question(driver, gen['question'])
-        time.sleep(10)
         status = get_status(driver)
         record= {
             'gen_id': gen['id']
@@ -115,24 +101,25 @@ if __name__ == '__main__':
             ,'timestamp':'Now()'
         }
         records.append({**record, **status})
-      
-        # exit question submission window 
-        #driver.close()
+<<<<<<< HEAD
+        if status['is_grammatical'] == 0: 
+            driver.find_element(By.CSS_SELECTOR, ".q-flex > .q-flex > .q-click-wrapper:nth-child(2) .q-text > .q-text").click()
+        else: 
+            driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) > .q-sticky .q-box .q-text > .q-text").click()
+=======
         driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) > .q-sticky .q-box .q-text > .q-text").click()
-        #driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").send_keys(Keys.ESCAPE)
-       
-        click_based = '''
-        driver.find_element(By.CSS_SELECTOR, ".q-click-wrapper:nth-child(2) .q-text > .q-text").click()
-        driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) .q-flex > .q-click-wrapper .q-text > .q-text").click()
-        assert driver.switch_to.alert.text == "Continue without editing topics?"
-        driver.switch_to.alert.accept()
-        driver.find_element(By.CSS_SELECTOR, ".kNZJaj:nth-child(1)")
-        actions = ActionChains(self.driver)
-        actions.move_to_element(element).perform()
-        driver.find_element(By.CSS_SELECTOR, ".kNZJaj:nth-child(1)").click()
-        '''
-
-
+>>>>>>> f3bac17... created the bot
+        driver.refresh()
+        time.sleep(random.randint(1,3))
+            #time.sleep(3)
+            #driver = webdriver.Chrome(ChromeDriverManager().install())
+            #login(params)
+        
+<<<<<<< HEAD
+    
+=======
+        
+>>>>>>> f3bac17... created the bot
         #driver.find_element(By.CSS_SELECTOR, ".q-absolute > .q-click-wrapper svg").click()
         
         
