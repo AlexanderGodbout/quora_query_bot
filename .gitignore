@@ -1,3 +1,14 @@
+
 secrets.*
 Business_Model.*
+models/
+checkpoint/
+bot_env/
+samples/
+data/
+__pycache__/
+.DS_Store
+
+
+
 
