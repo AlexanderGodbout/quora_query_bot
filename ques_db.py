@@ -92,11 +92,17 @@ class Table:
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if table == 'predicts': 
+=======
+        if table == 'gens': 
+>>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
             self.desc = { 
                 'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
                 ,'scrape_id':       'INT NOT NULL REFERENCES scrapes(id)'
+                ,'question':        'VARCHAR(255)'
                 ,'model':           'VARCHAR(255)'
+<<<<<<< HEAD
                 ,'predict_type':    'VARCHAR(255)'
                 ,'prediction':      'VARCHAR(255)'
 =======
@@ -108,6 +114,9 @@ class Table:
                 ,'model':           'VARCHAR(255)'
                 ,'params':          'VARCHAR(255)'
 >>>>>>> a130c4aa99f7aaf38246aa454d17528d7c526676
+=======
+                ,'params':          'VARCHAR(255)'
+>>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
                 ,'version':         'VARCHAR(255)'
                 ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
@@ -120,10 +129,14 @@ def create_database():
     db.create_table(Table('posts') )
     db.create_table(Table('benchmarks'))
 <<<<<<< HEAD
+<<<<<<< HEAD
     db.create_table(Table('predicts'))
 =======
     db.create_table(Table('gens'))
 >>>>>>> a130c4aa99f7aaf38246aa454d17528d7c526676
+=======
+    db.create_table(Table('gens'))
+>>>>>>> 111a99ac3da009b77b033300f33d42b3b72c894a
 
 create_database() 
 
