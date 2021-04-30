@@ -15,10 +15,7 @@ def gen_questions(generator, params):
 
 def Alex_gen(params):
     # Uses CLI to collect a user-generated question
-<<<<<<< HEAD
     db = ques_db()
-=======
->>>>>>> f3bac17... created the bot
     db.cursor.execute(''' SELECT r1.id, r1.question
                             FROM scrapes AS r1 JOIN
                             (SELECT CEIL(RAND() *
@@ -48,7 +45,7 @@ def GPT_gen(params):
     sess = gpt2.start_tf_sess()
     gpt2.load_gpt2(
         sess
-        ,checkpoint_dir="/Users/alexandergodbout/Documents/Grammarism/Code/Quora_Query_Bot/checkpoint/checkpoint_gpt2_v3"
+        ,checkpoint_dir="/Users/alexandergodbout/Documents/Grammarism/Code/Quora_Query_Bot/checkpoint/checkpoint_gpt2_v4"
         ,run_name="run1"
         ,model_name=None
         ,model_dir='models'
@@ -91,16 +88,12 @@ def GPT_gen(params):
 
 if __name__ == "__main__":
     db = ques_db()
-<<<<<<< HEAD
   
-=======
-
->>>>>>> f3bac17... created the bot
     model = 'GPT_gen'
 
     params = {
             'run_name': 'run1'
-            ,'checkpoint_dir': "/Users/alexandergodbout/Documents/Grammarism/Code/Quora_Query_Bot/checkpoint/checkpoint_gpt2_v3" 
+            ,'checkpoint_dir': "/Users/alexandergodbout/Documents/Grammarism/Code/Quora_Query_Bot/checkpoint/checkpoint_gpt2_v4" 
             ,'model_name': None
             ,'model_dir': 'models'
             ,'sample_dir': 'samples'
@@ -113,11 +106,7 @@ if __name__ == "__main__":
             ,'nsamples': 1
             ,'batch_size': 1
             ,'length': 1023
-<<<<<<< HEAD
             ,'temperature': 0.8
-=======
-            ,'temperature': 0.7
->>>>>>> f3bac17... created the bot
             ,'top_k': 0
             ,'top_p': 0.0
             ,'include_prefix': True

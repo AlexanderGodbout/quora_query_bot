@@ -3,6 +3,9 @@ from ques_db import ques_db, Table
 
 from datetime import date
 
+
+
+
 def get_gens(qty):
     db = ques_db()
     gens = db.cursor.execute('''   

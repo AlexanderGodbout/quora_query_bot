@@ -116,33 +116,13 @@ class Table:
                 ,'timestamp':         'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
             }
 
-<<<<<<< HEAD
         if table == 'groups': 
             self.desc = { 
                 'item_id':          'INT' 
                 ,'group_name':      'VARCHAR(255)'
                 ,'item_tbl':        'VARCHAR(255)'
                 ,'group_tbl':       'VARCHAR(255)'
-=======
-        if table == 'gens': 
-            self.desc = { 
-                'id':               'INT AUTO_INCREMENT PRIMARY KEY' 
-                ,'scrape_group':    'VARCHAR(255)'
-                ,'question':        'VARCHAR(255)'
-                ,'model':           'VARCHAR(255)'
-                ,'params':          'VARCHAR(255)'
-                ,'version':         'VARCHAR(255)'
-                ,'timestamp':       'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
->>>>>>> f3bac17... created the bot
             }
-
-        if table == 'groups': 
-                self.desc = { 
-                    'item_id':          'INT' 
-                    ,'group_name':      'VARCHAR(255)'
-                    ,'item_tbl':        'VARCHAR(255)'
-                    ,'group_tbl':       'VARCHAR(255)'
-                }
     
 def create_database(): 
 
@@ -151,10 +131,6 @@ def create_database():
     db.create_table(Table('posts') )
     db.create_table(Table('benchmarks'))
     db.create_table(Table('gens'))
-<<<<<<< HEAD
-    db.create_table(Table('evals'))
-=======
->>>>>>> f3bac17... created the bot
     db.create_table(Table('groups'))
 
 

@@ -101,25 +101,16 @@ if __name__ == '__main__':
             ,'timestamp':'Now()'
         }
         records.append({**record, **status})
-<<<<<<< HEAD
-        if status['is_grammatical'] == 0: 
-            driver.find_element(By.CSS_SELECTOR, ".q-flex > .q-flex > .q-click-wrapper:nth-child(2) .q-text > .q-text").click()
+        time.sleep(random.randint(1,3))
+        if status.get('is_grammatical', None) == 0: 
+            driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) .q-flex > .q-click-wrapper .q-text > .q-text").click()
         else: 
             driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) > .q-sticky .q-box .q-text > .q-text").click()
-=======
-        driver.find_element(By.CSS_SELECTOR, ".q-flex:nth-child(3) > .q-sticky .q-box .q-text > .q-text").click()
->>>>>>> f3bac17... created the bot
         driver.refresh()
         time.sleep(random.randint(1,3))
             #time.sleep(3)
             #driver = webdriver.Chrome(ChromeDriverManager().install())
             #login(params)
-        
-<<<<<<< HEAD
-    
-=======
-        
->>>>>>> f3bac17... created the bot
         #driver.find_element(By.CSS_SELECTOR, ".q-absolute > .q-click-wrapper svg").click()
         
         
