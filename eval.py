@@ -2,7 +2,7 @@
 from ques_db import ques_db, Table
 
 from datetime import date
-
+import language_tool_python
 
 
 
@@ -31,9 +31,29 @@ def alex_eval(gen, params):
     return {'is_postable': 0}
 
 
+def naive_eval(gen, param):
+    # Eval using simple string matching 
+    print(gen) 
+    if "quora" not in gen.lower() and len(gen) < 120: 
+        return {'is_postable': 1}
+    return {'is_postable': 0}
+
+def grammar_eval(gen, param): 
+    # Eval using the LanguageTool
+    print(gen)
+    tool = language_tool_python.LanguageTool('en-US')
+    matches = tool.check(gen)
+    if len(matches) == 0: 
+        return {'is_postable': 1}
+    return {'is_postable': 0}
+
+
+
 def get_eval(model, params, gen): 
     eval_dispatcher = {
         'alex': alex_eval
+        ,'naive': naive_eval 
+        ,'grammar': grammar_eval
         }
     return eval_dispatcher[model](gen, params)
 
@@ -41,7 +61,7 @@ def get_eval(model, params, gen):
 if __name__ == '__main__':
 
     qty = 100
-    model = 'alex'
+    model = 'grammar'
     params = ''
 
     records = []

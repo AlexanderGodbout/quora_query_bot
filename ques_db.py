@@ -134,7 +134,7 @@ def create_database():
     db.create_table(Table('groups'))
 
 
-create_database() 
+#create_database() 
 
 
 
